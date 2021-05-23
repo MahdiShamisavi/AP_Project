@@ -33,27 +33,51 @@ public class UserThread implements Runnable {
 
             // get user name
             String username = "";
+            boolean check ;
             do {
                 username = bufferedReader.readLine();
+                check = server.addUser(username, this);
+                if (!check) {
+                    this.sendMessage("this name exist please try another one");
+                } else {
+                    this.sendMessage("you conected to game");
+                }
             }
-            while (!server.addUser(username, this));
+            while (!check);
 
             //get message from client
+            String serverMessage = "New user connected: " + username;
+            server.broadcast(serverMessage, this);
 
+            String clientMessage;
 
+            do {
+                clientMessage = bufferedReader.readLine();
+                serverMessage = "[" + username + "]: " + clientMessage;
+                server.broadcast(serverMessage, this);
 
+            } while (!clientMessage.equals("exit"));
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            server.removeUser(username, this);
+            socket.close();
+
+            serverMessage = username + " has quitted.";
+            server.broadcast(serverMessage, this);
+
+        } catch (IOException ex) {
+            System.out.println("Error in UserThread: " + ex.getMessage());
+            ex.printStackTrace();
         }
+
 
     }
 
     /**
      * method for send message to client
+     *
      * @param str
      */
-    public void sendMessage(String str){
+    public void sendMessage(String str) {
         writer.println(str);
     }
 }

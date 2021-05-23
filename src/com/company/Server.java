@@ -38,7 +38,7 @@ public class Server {
                 ExecutorService executorService = Executors.newCachedThreadPool();
                 UserThread userThread = new UserThread(socket, this);
                 executorService.execute(userThread);
-                userThreads.add(userThread);
+
             }
 
 
@@ -50,26 +50,32 @@ public class Server {
 
     /**
      * method for broadcast message
+     *
      * @param message
      */
-    public void broadcast(String message){
-        for(UserThread user : userThreads){
+    public void broadcast(String message , UserThread userThread) {
+        for (UserThread user : userThreads) {
+            if (user == userThread)
+                continue;
+            //System.out.println(user);
             user.sendMessage(message);
         }
     }
 
     /**
      * add user with checking name
+     *
      * @param name
      * @param user
      */
-    public boolean addUser(String name ,UserThread user){
-        if (userNames.contains(name)){
+    public boolean addUser(String name, UserThread user) {
+        if (userNames.contains(name)) {
             return false;
+        }else {
+            userThreads.add(user);
+            userNames.add(name);
+            return true;
         }
-        userThreads.add(user);
-        userNames.add(name);
-        return true;
     }
 
 
@@ -95,5 +101,19 @@ public class Server {
 
     public ArrayList<UserThread> getUserThread() {
         return userThreads;
+    }
+
+    /**
+     * method for remove user
+     *
+     * @param username
+     * @param userThread
+     */
+    public void removeUser(String username, UserThread userThread) {
+        boolean removed = userNames.remove(username);
+        if (removed) {
+            userThreads.remove(userThread);
+            System.out.println("The user " + username + " quitted");
+        }
     }
 }
