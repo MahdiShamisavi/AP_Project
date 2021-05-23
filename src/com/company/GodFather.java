@@ -12,9 +12,11 @@ public class GodFather extends Mafia implements Action{
 
     /**
      * Action method for each player
+     * @return
      */
     @Override
-    public void doAction() {
+    public int doAction() {
 
+        return 0;
     }
 }

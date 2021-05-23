@@ -11,9 +11,11 @@ public class DoctorCitizen extends Citizen implements Action{
 
     /**
      * Action method for each player
+     * @return
      */
     @Override
-    public void doAction() {
+    public int doAction() {
 
+        return 0;
     }
 }

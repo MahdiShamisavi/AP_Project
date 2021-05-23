@@ -10,11 +10,22 @@ public class UserThread implements Runnable {
 
     private Socket socket;
     private Server server;
-    PrintWriter writer;
+    private PrintWriter writer;
+    private RoleHelper role;
+    private Player player;
+    boolean isMafia = false;
+    private String username = "";
 
-    public UserThread(Socket socket, Server server) {
+    /**
+     * constructor for UserThread
+     * @param socket
+     * @param server
+     * @param player
+     */
+    public UserThread(Socket socket, Server server, Player player) {
         this.socket = socket;
         this.server = server;
+        this.player = player;
     }
 
 
@@ -24,6 +35,9 @@ public class UserThread implements Runnable {
     @Override
     public void run() {
 
+        // set boolean Mafia
+        setBoolMafia();
+
         try {
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
@@ -32,15 +46,15 @@ public class UserThread implements Runnable {
             writer = new PrintWriter(out, true);
 
             // get user name
-            String username = "";
-            boolean check ;
+
+            boolean check;
             do {
                 username = bufferedReader.readLine();
                 check = server.addUser(username, this);
                 if (!check) {
                     this.sendMessage("this name exist please try another one");
                 } else {
-                    this.sendMessage("you conected to game");
+                    this.sendMessage("you connected to game");
                 }
             }
             while (!check);
@@ -54,7 +68,12 @@ public class UserThread implements Runnable {
             do {
                 clientMessage = bufferedReader.readLine();
                 serverMessage = "[" + username + "]: " + clientMessage;
-                server.broadcast(serverMessage, this);
+                // send message in day
+                if (player.isAlive() && !server.getController().isNight())
+                    server.broadcast(serverMessage, this);
+                // send message in night
+                if (player.isAlive() && isMafia && server.getController().isNight())
+                    server.broadcastMafia(serverMessage, this);
 
             } while (!clientMessage.equals("exit"));
 
@@ -72,6 +91,16 @@ public class UserThread implements Runnable {
 
     }
 
+    // check for mafia
+
+    /**
+     * check for mafia
+     */
+    private void setBoolMafia() {
+        if (player instanceof Mafia )
+            isMafia = true;
+    }
+
     /**
      * method for send message to client
      *
@@ -79,5 +108,34 @@ public class UserThread implements Runnable {
      */
     public void sendMessage(String str) {
         writer.println(str);
+    }
+
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public PrintWriter getWriter() {
+        return writer;
+    }
+
+    public RoleHelper getRole() {
+        return role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean isMafia() {
+        return isMafia;
     }
 }

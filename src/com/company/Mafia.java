@@ -10,4 +10,9 @@ public class Mafia extends Player{
         super(name, alive);
     }
 
+    @Override
+    public int doAction() {
+
+        return 0;
+    }
 }

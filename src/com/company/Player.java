@@ -4,7 +4,7 @@ package com.company;
  * player class
  * @author MAHDI
  */
-public abstract class Player {
+public abstract class Player implements Action{
     private String name;
     private boolean alive;
 
@@ -13,5 +13,19 @@ public abstract class Player {
         this.alive = alive;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 }

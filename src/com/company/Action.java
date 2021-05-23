@@ -8,5 +8,5 @@ public interface Action {
     /**
      * do action for every player
      */
-    public void doAction();
+    public int  doAction();
 }

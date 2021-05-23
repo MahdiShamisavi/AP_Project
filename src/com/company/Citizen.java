@@ -11,4 +11,9 @@ public class Citizen extends Player{
     }
 
 
+    @Override
+    public int doAction() {
+
+        return 0;
+    }
 }

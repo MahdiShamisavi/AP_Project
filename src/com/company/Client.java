@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
  * class client
  * @author MAHDI
  */
-public class Client {
+public class Client <T> {
     private int port;
 
     public Client(int port) {
@@ -24,7 +24,7 @@ public class Client {
             new Reader(socket, this).start();
             new Writer(socket, this).start();
 
-        } catch (IOException ex) {
+        } catch (IOException ignored) {
 
         }
 
