@@ -1,5 +1,7 @@
 package com.company;
 
+import java.net.Socket;
+
 /**
  * class for simple Mafia
  */
@@ -13,7 +15,8 @@ public class SimpleMafia extends Mafia implements Action{
      * Action method for each player
      */
     @Override
-    public void doAction() {
+    public int doAction(Socket socket) {
+        return (super.doAction(socket));
 
     }
 }

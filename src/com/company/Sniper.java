@@ -1,5 +1,8 @@
 package com.company;
 
+import java.io.*;
+import java.net.Socket;
+
 /**
  * class for Sniper
  * @author MAHDI
@@ -15,8 +18,21 @@ public class Sniper extends Citizen implements Action{
      * @return
      */
     @Override
-    public int doAction() {
+    public int doAction(Socket socket) {
+        String sniper = "";
+        try {
+            OutputStream out = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(out, true);
+            writer.println("shut one person otherwise print -1");
 
-        return 0;
+
+            InputStream in = socket.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            sniper = bufferedReader.readLine();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Integer.parseInt(sniper.trim());
     }
 }

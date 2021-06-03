@@ -1,5 +1,7 @@
 package com.company;
 
+import java.net.Socket;
+
 /**
  * class for psychologist
  * @author MAHDI
@@ -15,7 +17,7 @@ public class Psychologist extends Citizen implements Action{
      * @return
      */
     @Override
-    public int doAction() {
+    public int doAction(Socket socket) {
 
         return 0;
     }

@@ -1,5 +1,7 @@
 package com.company;
 
+import java.net.Socket;
+
 /**
  * class for DieHard
  * @author MAHDI
@@ -15,7 +17,7 @@ public class DieHard extends Citizen implements Action{
      * @return
      */
     @Override
-    public int doAction() {
+    public int doAction(Socket socket) {
 
         return 0;
     }

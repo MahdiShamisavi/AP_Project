@@ -11,7 +11,6 @@ public class UserThread implements Runnable {
     private Socket socket;
     private Server server;
     private PrintWriter writer;
-    private RoleHelper role;
     private Player player;
     boolean isMafia = false;
     private String username = "";
@@ -63,17 +62,21 @@ public class UserThread implements Runnable {
             String serverMessage = "New user connected: " + username;
             server.broadcast(serverMessage, this);
 
-            String clientMessage;
+            String clientMessage = "";
 
             do {
-                clientMessage = bufferedReader.readLine();
-                serverMessage = "[" + username + "]: " + clientMessage;
                 // send message in day
-                if (player.isAlive() && !server.getController().isNight())
+                if (player.isAlive() && !server.getController().isNight()){
+                    clientMessage = bufferedReader.readLine();
+                    serverMessage = "[" + username + "]: " + clientMessage;
                     server.broadcast(serverMessage, this);
+                }
                 // send message in night
-                if (player.isAlive() && isMafia && server.getController().isNight())
+                if (player.isAlive() && isMafia && server.getController().isNight()){
+                    clientMessage = bufferedReader.readLine();
+                    serverMessage = "[" + username + "]: " + clientMessage;
                     server.broadcastMafia(serverMessage, this);
+                }
 
             } while (!clientMessage.equals("exit"));
 
@@ -121,10 +124,6 @@ public class UserThread implements Runnable {
 
     public PrintWriter getWriter() {
         return writer;
-    }
-
-    public RoleHelper getRole() {
-        return role;
     }
 
     public String getUsername() {

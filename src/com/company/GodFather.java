@@ -1,5 +1,7 @@
 package com.company;
 
+import java.net.Socket;
+
 /**
  * class for GodFather of Mafia
  * @author MAHDI
@@ -15,8 +17,8 @@ public class GodFather extends Mafia implements Action{
      * @return
      */
     @Override
-    public int doAction() {
+    public int doAction(Socket socket) {
+        return (super.doAction(socket));
 
-        return 0;
     }
 }

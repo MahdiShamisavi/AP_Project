@@ -20,20 +20,9 @@ public class Server {
     private ArrayList<String> userNames;
     private ArrayList<UserThread> userThreads;
     private Controller controller;
+    private boolean chatNight = false;
 
-    //Role[] roles = Role.values();
-    // create RoleHelper for every role
-    RoleHelper godRole = new RoleHelper(new GodFather("GodFather" , true));
-    RoleHelper DieHardRole = new RoleHelper(new DieHard("DieHard" , true));
-    RoleHelper DoctorCitizenRole = new RoleHelper(new DoctorCitizen("DoctorCitizen" , true));
-    RoleHelper DoctorMafiaRole = new RoleHelper(new DoctorMafia("DoctorMafia" , true));
-    RoleHelper MayorRole = new RoleHelper(new Mayor("Mayor" , true));
-    RoleHelper PsychologistRole = new RoleHelper(new Psychologist("Psychologist" , true));
-    RoleHelper SimpleCitizenRole = new RoleHelper(new SimpleCitizen("SimpleCitizen" , true));
-    RoleHelper SimpleMafiaRole = new RoleHelper(new SimpleMafia("SimpleMafia" , true));
-    RoleHelper SniperRole = new RoleHelper(new Sniper("Sniper" , true));
 
-    ArrayList<RoleHelper> roleHelpers = new ArrayList<RoleHelper>();
     ArrayList<Player> players = new ArrayList<Player>();
 
 
@@ -59,6 +48,7 @@ public class Server {
             Collections.shuffle(players);
 
             int j = 0;
+
             while (true) {
 
                 Socket socket = serverSocket.accept();
@@ -66,10 +56,11 @@ public class Server {
                 ExecutorService executorService = Executors.newCachedThreadPool();
                 UserThread userThread = new UserThread(socket, this , players.get(j));
                 executorService.execute(userThread);
-                j++ ;
-                if (j == players.size()){
+                j = j + 1 ;
+                if (players.size() == j){
+                    System.out.println("game started" );
                     j = 0;
-                    controller.start();
+                    //controller.start();
                 }
 
             }
@@ -88,6 +79,8 @@ public class Server {
         players.add(new GodFather("GodFather" , true));
         players.add(new DieHard("DieHard" , true));
         players.add(new DoctorCitizen("DoctorCitizen" , true));
+        players.add(new DoctorMafia("DoctorMafia" , true));
+        players.add(new Sniper("Sniper" , true));
     }
 
     /**
@@ -130,6 +123,8 @@ public class Server {
         }else {
             userThreads.add(user);
             userNames.add(name);
+            if (this.getUserThread().size() % this.getPlayers().size() == 0)
+                controller.start();
             return true;
         }
     }
@@ -162,6 +157,34 @@ public class Server {
 
     public Controller getController() {
         return controller;
+    }
+
+    public boolean isChatNight() {
+        return chatNight;
+    }
+
+    /**
+     * getter for UserName
+     * @return
+     */
+    public ArrayList<String> getUserNames() {
+        return userNames;
+    }
+
+    /**
+     * getter for UserThread
+     * @return
+     */
+    public ArrayList<UserThread> getUserThreads() {
+        return userThreads;
+    }
+
+    /**
+     * getter for Player
+     * @return
+     */
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 
     /**
