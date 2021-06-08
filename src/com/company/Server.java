@@ -19,7 +19,7 @@ public class Server {
     private int port;
     private ArrayList<String> userNames;
     private ArrayList<UserThread> userThreads;
-    private Controller controller;
+    private final Controller controller;
     private boolean chatNight = false;
 
 
@@ -161,6 +161,10 @@ public class Server {
 
     public boolean isChatNight() {
         return chatNight;
+    }
+
+    public void setChatNight(boolean chatNight) {
+        this.chatNight = chatNight;
     }
 
     /**

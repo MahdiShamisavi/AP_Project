@@ -2,11 +2,13 @@ package com.company;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Objects;
+import java.util.Observable;
 
 /**
  * class for UserThread
  */
-public class UserThread implements Runnable {
+public class UserThread extends Observable implements Runnable {
 
     private Socket socket;
     private Server server;
@@ -14,9 +16,14 @@ public class UserThread implements Runnable {
     private Player player;
     boolean isMafia = false;
     private String username = "";
+    private boolean isCanSpeak = false;
+    private int command;
+    private boolean getCommand = false;
+    private boolean commandReady;
 
     /**
      * constructor for UserThread
+     *
      * @param socket
      * @param server
      * @param player
@@ -65,17 +72,24 @@ public class UserThread implements Runnable {
             String clientMessage = "";
 
             do {
+                clientMessage = bufferedReader.readLine();
                 // send message in day
-                if (player.isAlive() && !server.getController().isNight()){
-                    clientMessage = bufferedReader.readLine();
+                if (player.isAlive() && !server.getController().isNight() && isCanSpeak) {
+                    System.out.println("day");
                     serverMessage = "[" + username + "]: " + clientMessage;
                     server.broadcast(serverMessage, this);
-                }
-                // send message in night
-                if (player.isAlive() && isMafia && server.getController().isNight()){
-                    clientMessage = bufferedReader.readLine();
+                } else if
+                    // send message in night
+                (server.isChatNight() && player.isAlive() && isMafia && server.getController().isNight()) {
+                    System.out.println("here");
                     serverMessage = "[" + username + "]: " + clientMessage;
                     server.broadcastMafia(serverMessage, this);
+                }
+                else if(getCommand){
+                    command = Integer.parseInt(clientMessage);
+                    this.getCommand = false;
+                    this.commandReady = true;
+                    notifyObservers(command);
                 }
 
             } while (!clientMessage.equals("exit"));
@@ -100,7 +114,7 @@ public class UserThread implements Runnable {
      * check for mafia
      */
     private void setBoolMafia() {
-        if (player instanceof Mafia )
+        if (player instanceof Mafia)
             isMafia = true;
     }
 
@@ -136,5 +150,50 @@ public class UserThread implements Runnable {
 
     public boolean isMafia() {
         return isMafia;
+    }
+
+    public boolean isCanSpeak() {
+        return isCanSpeak;
+    }
+
+    public void setCanSpeak(boolean canSpeak) {
+        isCanSpeak = canSpeak;
+    }
+
+    public int getCommand() {
+        return command;
+    }
+
+    public void setCommand(int command) {
+        this.command = command;
+    }
+
+    public boolean isGetCommand() {
+        return getCommand;
+    }
+
+    public void setGetCommand(boolean getCommand) {
+        this.getCommand = getCommand;
+    }
+
+    public boolean isCommandReady() {
+        return commandReady;
+    }
+
+    public void setCommandReady(boolean commandReady) {
+        this.commandReady = commandReady;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserThread)) return false;
+        UserThread that = (UserThread) o;
+        return isMafia == that.isMafia && Objects.equals(socket, that.socket) && Objects.equals(server, that.server) && Objects.equals(writer, that.writer) && Objects.equals(player, that.player) && Objects.equals(username, that.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(socket, server, writer, player, isMafia, username);
     }
 }

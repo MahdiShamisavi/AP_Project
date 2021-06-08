@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Objects;
+
 /**
  * player class
  * @author MAHDI
@@ -27,5 +29,18 @@ public abstract class Player implements Action{
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+        Player player = (Player) o;
+        return alive == player.alive && Objects.equals(name, player.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, alive);
     }
 }
