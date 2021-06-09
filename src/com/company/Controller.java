@@ -18,6 +18,7 @@ public class Controller extends Thread implements Observer {
     private final ArrayList<UserThread> mafias;
     private boolean goOn;
     private HashMap<UserThread, Integer> hashCommand;
+    UserThread psychologistPurpose = null;
 
     public Controller(Server server) {
         this.server = server;
@@ -153,7 +154,10 @@ public class Controller extends Thread implements Observer {
                     UserThread sniperPurpose = sniperCitizen();
 
                     // Psychologist purpose
-                    UserThread psychologistPurpose = psychologist();
+                    psychologistPurpose = psychologist();
+
+                    //Detective Operation
+                    detective();
 
 
                     // kill shut mafia in night
@@ -178,6 +182,10 @@ public class Controller extends Thread implements Observer {
                         }
                     }
 
+
+                    //DieHard Operation
+                    dieHard();
+
                 }
 
 
@@ -188,14 +196,22 @@ public class Controller extends Thread implements Observer {
 
                 // vote in day
                 Vote vote = new Vote(server);
-                HashMap<UserThread , Integer> result = vote.voting();
+                HashMap<UserThread, Integer> result = vote.voting();
                 Map.Entry<UserThread, Integer> maxVote = vote.maxVote(result);
                 System.out.println(maxVote.getKey());
 
                 //kill max vote
                 UserThread killDay = maxVote.getKey();
-                killDay.getPlayer().setAlive(false);
-                server.broadcast(killDay.getUsername() + " is Killed", null);
+
+                // mayor decision
+                int mayorDecision = mayor();
+
+                if (mayorDecision != 1) {
+                    killDay.getPlayer().setAlive(false);
+                    server.broadcast(killDay.getUsername() + " is Killed", null);
+                } else {
+                    server.broadcast("mayor cancel voting", null);
+                }
 
 
                 isNight = true;
@@ -206,29 +222,99 @@ public class Controller extends Thread implements Observer {
         }
 
 
+        System.out.println("Game ended");
+
+
     }
+
 
     /**
      * method for speaking in day
      */
     private void speakDay() {
         for (UserThread user : server.getUserThread()) {
-            user.sendMessage("Please speak");
-            user.setCanSpeak(true);
+            user.sendMessage("Please speak , this is your turn");
+            if (!user.equals(psychologistPurpose)) {
+                user.setCanSpeak(true);
+                try {
+                    sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                user.setCanSpeak(false);
+                user.sendMessage("your turn finish");
+            }
         }
 
-        try {
-            sleep(20000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        for (UserThread user : server.getUserThread()) {
-            user.sendMessage("end speaking");
-            user.setCanSpeak(false);
-        }
+//        for (UserThread user : server.getUserThread()) {
+//            user.sendMessage("end speaking");
+//            user.setCanSpeak(false);
+//        }
 
     }
+
+    /**
+     * method for dieHard Operation
+     */
+    private void dieHard() {
+        int k = -1;
+        for (UserThread user : server.getUserThread()) {
+            if (user.getPlayer() instanceof DieHard && user.getPlayer().isAlive()) {
+                user.setGetCommand(true);
+                k = user.getPlayer().doAction(user.getSocket(), user.getBufferedReader());
+                if (k == 1) {
+                    server.broadcast("Role removed : ", null);
+                    for (UserThread u : server.getUserThread()) {
+                        if (!u.getPlayer().isAlive()) {
+                            server.broadcast(u.getPlayer().getName(), null);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * method for detective operation
+     */
+    private void detective() {
+        int k = -1;
+        for (UserThread user : server.getUserThread()) {
+            if (user.getPlayer() instanceof Detective && user.getPlayer().isAlive()) {
+                showAllMembers(user);
+                user.setGetCommand(true);
+                k = user.getPlayer().doAction(user.getSocket(), user.getBufferedReader());
+                UserThread temp = allUser.get(k - 1);
+                if (temp.getPlayer() instanceof Citizen || temp.getPlayer() instanceof GodFather) {
+                    user.sendMessage("Negative");
+                } else {
+                    user.sendMessage("Positive");
+                }
+            }
+        }
+    }
+
+
+    /**
+     * method for mayor operation
+     *
+     * @return
+     */
+    private int mayor() {
+        int k = -1;
+        for (UserThread user : server.getUserThread()) {
+            if (user.getPlayer() instanceof Mayor && user.getPlayer().isAlive()) {
+
+                user.setGetCommand(true);
+                k = user.getPlayer().doAction(user.getSocket(), user.getBufferedReader());
+
+            }
+        }
+
+        return k;
+    }
+
 
     /**
      * method for sniper
@@ -355,6 +441,7 @@ public class Controller extends Thread implements Observer {
     private void showMafia() {
         int j = 1;
         mafias.clear();
+        server.broadcastMafia("mafias : ", null);
         for (UserThread user : server.getUserThread()) {
             if (user.isMafia() && user.getPlayer().isAlive()) {
                 server.broadcastMafia(j + ":" + user.getUsername(), null);

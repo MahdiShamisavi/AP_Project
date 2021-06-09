@@ -81,6 +81,11 @@ public class Server {
         players.add(new DoctorCitizen("DoctorCitizen" , true));
         players.add(new DoctorMafia("DoctorMafia" , true));
         players.add(new Sniper("Sniper" , true));
+        players.add(new Detective("Detective" , true));
+        players.add(new Mayor("Mayor" , true));
+        players.add(new Psychologist("Psychologist" , true));
+        players.add(new SimpleCitizen("SimpleCitizen" , true));
+        players.add(new SimpleMafia("SimpleMafia" , true));
     }
 
     /**

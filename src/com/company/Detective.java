@@ -6,28 +6,19 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-/**
- * class for Mayor
- *
- * @author MAHDI
- */
-public class Mayor extends Citizen implements Action {
+public class Detective extends Citizen implements Action {
 
-    public Mayor(String name, boolean alive) {
+    public Detective(String name, boolean alive) {
         super(name, alive);
     }
 
-    /**
-     * Action method for each player
-     *
-     * @return
-     */
     @Override
     public int doAction(Socket socket, BufferedReader bufferedReader) {
+
         try {
             OutputStream out = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(out, true);
-            writer.println("would you cancel voting if you want please print 1");
+            writer.println("pleas enter number of person that you want Inquire");
 
             super.purpose = -1;
 
@@ -47,4 +38,5 @@ public class Mayor extends Citizen implements Action {
         }
         return purpose;
     }
+
 }
