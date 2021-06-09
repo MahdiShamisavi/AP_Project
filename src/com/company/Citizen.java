@@ -1,5 +1,6 @@
 package com.company;
 
+import java.io.BufferedReader;
 import java.net.Socket;
 
 /**
@@ -14,7 +15,7 @@ public class Citizen extends Player{
 
 
     @Override
-    public int doAction(Socket socket) {
+    public int doAction(Socket socket, BufferedReader bufferedReader) {
         return 0;
     }
 }

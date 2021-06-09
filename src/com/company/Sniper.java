@@ -18,21 +18,30 @@ public class Sniper extends Citizen implements Action{
      * @return
      */
     @Override
-    public int doAction(Socket socket) {
+    public int doAction(Socket socket, BufferedReader bufferedReader) {
         String sniper = "";
         try {
             OutputStream out = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(out, true);
             writer.println("shut one person otherwise print -1");
 
+            super.purpose = -1;
 
-            InputStream in = socket.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            sniper = bufferedReader.readLine();
+//            InputStream in = socket.getInputStream();
+//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                System.out.println("interrupted");
+            }
+
+            purpose = super.getPurpose();
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Integer.parseInt(sniper.trim());
+        return purpose;
     }
 }

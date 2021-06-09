@@ -1,5 +1,6 @@
 package com.company;
 
+import java.io.BufferedReader;
 import java.net.Socket;
 
 /**
@@ -17,8 +18,8 @@ public class GodFather extends Mafia implements Action{
      * @return
      */
     @Override
-    public int doAction(Socket socket) {
-        return (super.doAction(socket));
+    public int doAction(Socket socket, BufferedReader bufferedReader) {
+        return (super.doAction(socket,bufferedReader));
 
     }
 }

@@ -9,6 +9,7 @@ import java.util.Objects;
 public abstract class Player implements Action{
     private String name;
     private boolean alive;
+    protected int purpose;
 
     public Player(String name, boolean alive) {
         this.name = name;
@@ -29,6 +30,14 @@ public abstract class Player implements Action{
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public int getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(int purpose) {
+        this.purpose = purpose;
     }
 
     @Override

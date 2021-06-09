@@ -18,21 +18,30 @@ public class DoctorMafia extends Mafia implements Action{
      * @return
      */
     @Override
-    public int doAction(Socket socket) {
+    public int doAction(Socket socket, BufferedReader bufferedReader) {
         String saveMafia = "";
         try {
             OutputStream out = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(out, true);
             writer.println("Doctor lector save one person");
 
+            super.purpose = -1;
 
-            InputStream in = socket.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            saveMafia = bufferedReader.readLine();
+//            InputStream in = socket.getInputStream();
+//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                System.out.println("interrupted");
+            }
+
+            purpose = super.getPurpose();
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Integer.parseInt(saveMafia.trim());
+        return purpose;
     }
 }

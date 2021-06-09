@@ -1,5 +1,6 @@
 package com.company;
 
+import java.io.BufferedReader;
 import java.net.Socket;
 
 /**
@@ -17,7 +18,7 @@ public class Mayor extends Citizen implements Action{
      * @return
      */
     @Override
-    public int doAction(Socket socket) {
+    public int doAction(Socket socket, BufferedReader bufferedReader) {
 
         return 0;
     }

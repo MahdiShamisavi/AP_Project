@@ -1,5 +1,6 @@
 package com.company;
 
+import java.io.BufferedReader;
 import java.net.Socket;
 
 /**
@@ -10,5 +11,5 @@ public interface Action {
     /**
      * do action for every player
      */
-    public int  doAction(Socket socket);
+    public int  doAction(Socket socket , BufferedReader bufferedReader);
 }

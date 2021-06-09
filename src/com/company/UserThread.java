@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Observable;
 
@@ -20,6 +21,9 @@ public class UserThread extends Observable implements Runnable {
     private int command;
     private boolean getCommand = false;
     private boolean commandReady;
+    BufferedReader bufferedReader ;
+    private int vote ;
+    private boolean getVote = false;
 
     /**
      * constructor for UserThread
@@ -48,7 +52,7 @@ public class UserThread extends Observable implements Runnable {
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            bufferedReader = new BufferedReader(new InputStreamReader(in));
             writer = new PrintWriter(out, true);
 
             // get user name
@@ -75,21 +79,33 @@ public class UserThread extends Observable implements Runnable {
                 clientMessage = bufferedReader.readLine();
                 // send message in day
                 if (player.isAlive() && !server.getController().isNight() && isCanSpeak) {
+//                    clientMessage = bufferedReader.readLine();
                     System.out.println("day");
                     serverMessage = "[" + username + "]: " + clientMessage;
                     server.broadcast(serverMessage, this);
                 } else if
                     // send message in night
                 (server.isChatNight() && player.isAlive() && isMafia && server.getController().isNight()) {
+//                    clientMessage = bufferedReader.readLine();
                     System.out.println("here");
                     serverMessage = "[" + username + "]: " + clientMessage;
                     server.broadcastMafia(serverMessage, this);
                 }
-                else if(getCommand){
+                else if (getCommand){
                     command = Integer.parseInt(clientMessage);
+                    System.out.println("command");
                     this.getCommand = false;
-                    this.commandReady = true;
+//                    this.commandReady = true;
+//                    HashMap<UserThread , Integer> hashCommand = new HashMap<>();
+//                    hashCommand.put(this , command);
+                    this.player.setPurpose(command);
                     notifyObservers(command);
+                    server.getController().interrupt();
+                }else if(getVote){
+                    vote = Integer.parseInt(clientMessage);
+                    System.out.println("vote");
+                    this.getVote = false;
+
                 }
 
             } while (!clientMessage.equals("exit"));
@@ -182,6 +198,30 @@ public class UserThread extends Observable implements Runnable {
 
     public void setCommandReady(boolean commandReady) {
         this.commandReady = commandReady;
+    }
+
+    public BufferedReader getBufferedReader() {
+        return bufferedReader;
+    }
+
+    public void setBufferedReader(BufferedReader bufferedReader) {
+        this.bufferedReader = bufferedReader;
+    }
+
+    public int getVote() {
+        return vote;
+    }
+
+    public void setVote(int vote) {
+        this.vote = vote;
+    }
+
+    public boolean isGetVote() {
+        return getVote;
+    }
+
+    public void setGetVote(boolean getVote) {
+        this.getVote = getVote;
     }
 
     @Override
