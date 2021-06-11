@@ -31,7 +31,7 @@ public class Sniper extends Citizen implements Action{
 //            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 System.out.println("interrupted");
             }

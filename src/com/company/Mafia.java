@@ -26,7 +26,7 @@ public class Mafia extends Player implements Action{
 //            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
             try {
-                Thread.sleep(15000);
+                Thread.sleep(25000);
             } catch (InterruptedException e) {
                 System.out.println("interrupted");
             }

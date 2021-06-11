@@ -83,6 +83,7 @@ public class Controller extends Thread implements Observer {
                 // Mafia Know Role each other
                 if (numberNight == 0) {
 
+                    server.broadcastMafia("Night started" , null);
                     server.broadcastMafia("Mafia wake up ", null);
                     for (UserThread user : server.getUserThread()) {
                         if (user.isMafia() && user.getPlayer().isAlive()) {
@@ -93,6 +94,7 @@ public class Controller extends Thread implements Observer {
                     isNight = false;
 
                 } else {
+                    server.broadcastMafia("Night started" , null);
                     // other nights
 
                     // Citizen Doctor operation
@@ -192,6 +194,7 @@ public class Controller extends Thread implements Observer {
                 isNight = false;
             } else {
 
+                server.broadcastMafia("Day started" , null);
                 speakDay();
 
                 // vote in day
@@ -237,7 +240,7 @@ public class Controller extends Thread implements Observer {
             if (!user.equals(psychologistPurpose)) {
                 user.setCanSpeak(true);
                 try {
-                    sleep(20000);
+                    sleep(25000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -285,11 +288,14 @@ public class Controller extends Thread implements Observer {
                 showAllMembers(user);
                 user.setGetCommand(true);
                 k = user.getPlayer().doAction(user.getSocket(), user.getBufferedReader());
-                UserThread temp = allUser.get(k - 1);
-                if (temp.getPlayer() instanceof Citizen || temp.getPlayer() instanceof GodFather) {
-                    user.sendMessage("Negative");
-                } else {
-                    user.sendMessage("Positive");
+                if ( k != -1){
+                    UserThread temp = allUser.get(k - 1);
+                    if (temp.getPlayer() instanceof Citizen || temp.getPlayer() instanceof GodFather) {
+                        user.sendMessage("Negative");
+                    } else {
+                        user.sendMessage("Positive");
+                    }
+
                 }
             }
         }

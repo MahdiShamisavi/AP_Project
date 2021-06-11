@@ -33,7 +33,7 @@ public class DieHard extends Citizen implements Action {
 
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 System.out.println("interrupted");
             }

@@ -123,7 +123,7 @@ public class Server {
      * @param user
      */
     public boolean addUser(String name, UserThread user) {
-        if (userNames.contains(name)) {
+        if (userNames.contains(name) || name.equals("")) {
             return false;
         }else {
             userThreads.add(user);
